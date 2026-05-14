@@ -2,6 +2,7 @@
 #include "car.h"
 #include "cat.h"
 #include <stdio.h>
+#include <stdlib.h>
 
 int main() {
   struct Animal *my_animal = create_animal("Buddy", 5);
@@ -21,10 +22,11 @@ int main() {
   say_hello((struct Animal *)
                 my_cat); // Treat cat as an animal, this is INHERITANCE in C
 
-  // NOTE: POLYMORPHISM in C is achieved through function pointers in the struct definition.
+  // NOTE: POLYMORPHISM in C is achieved through function pointers in the struct
+  // definition.
   extern struct Car
       bmw; // Declare the external Car instance defined in bmw_car.c
   bmw.start_engine();
 
-  return 0;
+  return EXIT_SUCCESS;
 }
