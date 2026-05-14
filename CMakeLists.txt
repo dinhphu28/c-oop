@@ -19,5 +19,6 @@ add_executable(coop
   src/main.c
   src/animal.c
   src/cat.c
+  src/bmw_car.c
 )
 
