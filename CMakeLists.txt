@@ -20,5 +20,7 @@ add_executable(coop
   src/animal.c
   src/cat.c
   src/bmw_car.c
+  src/bmw_bike.c
+  src/ducati_bike.c
 )
 
