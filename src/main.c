@@ -4,8 +4,8 @@
 // #include "animal.c"
 
 int main() {
-  printf("Hello from CMake C Project!\n");
   struct Animal *my_animal = create_animal("Buddy", 5);
+  say_hello(my_animal);
 
   /*
    NOTE: Below lines will cause compilation error because the struct definition
@@ -17,6 +17,9 @@ int main() {
   struct Cat *my_cat = create_cat("Whiskers", 3);
   printf("My cat's name is %s and it is %d years old.\n", get_name(my_cat),
          get_age(my_cat));
+
+  say_hello((struct Animal *)
+                my_cat); // Treat cat as an animal, this is INHERITANCE in C
 
   return 0;
 }
