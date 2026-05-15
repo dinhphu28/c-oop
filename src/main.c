@@ -4,54 +4,28 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "bmw_bike.h"
-#include "ducati_bike.h"
 #include "motorbike.h"
 
-int ride_bmw_bike() {
-  printf("Starting the BMW bike...\n");
+#include "motorbike_factory.h"
 
-  // Create a BMW bike and use its functions through the Motorbike interface
-  struct Motorbike *my_bike = create_bmw_bike("BMW R1250 GSA", 1);
-  if (my_bike == NULL) {
-    return EXIT_FAILURE; // Handle memory allocation failure
-  }
+void encapsulation_example();
+void inheritance_example();
+void polymorphism_example();
 
-  // Use the Motorbike interface to interact with the BMW bike
-  printf("Current fuel level: %d liters.\n", my_bike->get_fuel_level(my_bike));
-
-  my_bike->fill_gas(my_bike, 20);
-  printf("Current fuel level after filling gas: %d liters.\n",
-         my_bike->get_fuel_level(my_bike));
-
-  my_bike->start_engine(my_bike);
-
-  free(my_bike);
-
-  return EXIT_SUCCESS;
-}
-
-int ride_ducati_bike() {
-  printf("Starting the Ducati bike...\n");
-
-  struct Motorbike *ducati_bike = create_ducati_bike("Ducati Panigale V4S", 5);
-  if (ducati_bike == NULL) {
-    return EXIT_FAILURE; // Handle memory allocation failure
-  }
-
-  printf("Current fuel level: %d liters.\n",
-         ducati_bike->get_fuel_level(ducati_bike));
-  ducati_bike->fill_gas(ducati_bike, 15);
-  printf("Current fuel level after filling gas: %d liters.\n",
-         ducati_bike->get_fuel_level(ducati_bike));
-  ducati_bike->start_engine(ducati_bike);
-
-  free(ducati_bike);
-
-  return EXIT_SUCCESS;
-}
+int factory_method_example();
+int ride_bike(struct Motorbike *bike);
 
 int main() {
+  encapsulation_example();
+  inheritance_example();
+  polymorphism_example();
+
+  return factory_method_example();
+
+  return EXIT_SUCCESS;
+}
+
+void encapsulation_example() {
   struct Animal *my_animal = create_animal("Buddy", 5);
   say_hello(my_animal);
 
@@ -62,6 +36,10 @@ int main() {
   // printf("My animal's name is %s and it is %d years old.\n", my_animal->name,
   // my_animal->age);
 
+  free(my_animal);
+}
+
+void inheritance_example() {
   struct Cat *my_cat = create_cat("Whiskers", 3);
   printf("My cat's name is %s and it is %d years old.\n", get_name(my_cat),
          get_age(my_cat));
@@ -70,16 +48,53 @@ int main() {
   say_hello((struct Animal *)
                 my_cat); // Treat cat as an animal, this is INHERITANCE in C
 
+  free(my_cat);
+}
+
+void polymorphism_example() {
   // NOTE: POLYMORPHISM in C is achieved through function pointers in the struct
   // definition.
   extern struct Car
       bmw; // Declare the external Car instance defined in bmw_car.c
   bmw.start_engine();
+}
 
-  ride_bmw_bike();
-  ride_ducati_bike();
+int factory_method_example() {
+  // NOTE: FACTORY PATTERN in C is implemented by defining a factory struct
+  extern struct MotorbikeFactory
+      motorbike_factory; // Declare the factory instance
 
-  free(my_cat);
-  free(my_animal);
+  struct Motorbike *bmw_bike = motorbike_factory.create_motorbike(
+      &motorbike_factory, BMW, "BMW R1250 GSA");
+  if (bmw_bike == NULL) {
+    fprintf(stderr, "Failed to create motorbike.\n");
+    return EXIT_FAILURE; // Handle factory failure case
+  }
+
+  struct Motorbike *ducati_bike = motorbike_factory.create_motorbike(
+      &motorbike_factory, DUCATI, "Ducati Panigale V4S");
+  if (ducati_bike == NULL) {
+    fprintf(stderr, "Failed to create motorbike.\n");
+    free(bmw_bike);      // Clean up previously created bike
+    return EXIT_FAILURE; // Handle factory failure case
+  }
+
+  ride_bike(bmw_bike);
+  ride_bike(ducati_bike);
+
+  free(bmw_bike);
+  free(ducati_bike);
+
+  return EXIT_SUCCESS;
+}
+
+int ride_bike(struct Motorbike *bike) {
+  printf("Starting the bike...\n");
+  // Use the Motorbike interface to interact with the bike
+  printf("Current fuel level: %d liters.\n", bike->get_fuel_level(bike));
+  bike->fill_gas(bike, 20);
+  printf("Current fuel level after filling gas: %d liters.\n",
+         bike->get_fuel_level(bike));
+  bike->start_engine(bike);
   return EXIT_SUCCESS;
 }

@@ -22,5 +22,6 @@ add_executable(coop
   src/bmw_car.c
   src/bmw_bike.c
   src/ducati_bike.c
+  src/motorbike_factory.c
 )
 
